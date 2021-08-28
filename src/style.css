@@ -35,6 +35,7 @@ li {
   font-size: 15px;
   font-weight: 100;
   line-height: 19px;
+  text-transform: capitalize;
 }
 
 .weather-temperature img {
