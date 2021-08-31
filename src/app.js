@@ -1,3 +1,4 @@
+//Format day for current weather
 function formatDate(timestamp) {
   //calculate date
   let date = new Date(timestamp);
@@ -22,6 +23,7 @@ function formatDate(timestamp) {
   return `${day} ${hours}:${minutes}`;
 }
 
+//Format day for forecast
 function formatDay(timestamp) {
   let date = new Date(timestamp * 1000);
   let day = date.getDay();
@@ -29,12 +31,14 @@ function formatDay(timestamp) {
   return days[day];
 }
 
+// Integrat forecast API call
 function getForecast(coordinates) {
   let apiKey = "078db4e136e212a8147d77a8cd2054b4";
   let apiURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
   axios.get(apiURL).then(displayForecast);
 }
 
+//Display current temperature
 function displayTempertaure(response) {
   let temperatureElement = document.querySelector("#temperature");
   let windElement = document.querySelector("#wind");
@@ -58,15 +62,18 @@ function displayTempertaure(response) {
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
 
+  // Send coordinates to make forecast API call
   getForecast(response.data.coord);
 }
 
+//Current temperature API Call using user input
 function search(city) {
   let apiKey = "078db4e136e212a8147d77a8cd2054b4";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayTempertaure);
 }
 
+// Display forecast weather
 function displayForecast(response) {
   let forecast = response.data.daily;
   let forecastElement = document.querySelector("#forecast");
@@ -103,6 +110,7 @@ function displayForecast(response) {
   forecastElement.innerHTML = forecastHTML;
 }
 
+//Handle user city input
 function handleSubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
@@ -111,7 +119,7 @@ function handleSubmit(event) {
 
 function displayFahrenheitTemperature(event) {
   event.preventDefault();
-  //remove acive class celsius link & add to fehrenheit
+  //Remove acive class celsius link & add to fehrenheit
   celsiusLink.classList.remove("active");
   fahrenheitLink.classList.add("active");
   let temperatureElement = document.querySelector("#temperature");
@@ -121,10 +129,9 @@ function displayFahrenheitTemperature(event) {
 
 function displayCelsiusTemperature(event) {
   event.preventDefault();
-  //add acive class celsius link & remove to fehrenheit
+  //Add acive class celsius link & remove to fehrenheit
   celsiusLink.classList.add("active");
   fahrenheitLink.classList.remove("active");
-
   let temperatureElement = document.querySelector("#temperature");
   temperatureElement.innerHTML = Math.round(celsiusTemperature);
 }
@@ -132,11 +139,14 @@ function displayCelsiusTemperature(event) {
 //Global variable accessible all functions, used to store the value
 let celsiusTemperature = null;
 
+//Default city to show if no user input received
 search("New York");
 
+// Retrieve & send user input
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
+//Handle changes from fahrenheit to celcius for current weather
 let fahrenheitLink = document.querySelector("#fahrenheit-link");
 fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
 
