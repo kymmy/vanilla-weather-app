@@ -2,10 +2,10 @@ function formatDate(timestamp) {
   //calculate date
   let date = new Date(timestamp);
   let hours = date.getHours();
-  let minutes = date.getMinutes();
   if (hours < 10) {
-    minutes = `0${hours}`;
+    hours = `0${hours}`;
   }
+  let minutes = date.getMinutes();
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
