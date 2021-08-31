@@ -52,6 +52,34 @@ function search(city) {
   axios.get(apiUrl).then(displayTempertaure);
 }
 
+function displayForecast() {
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = `<div class="row">`;
+  let days = ["Thu", "Fri", "Sat", "Sun", "Mon"];
+  days.forEach(function (day) {
+    forecastHTML =
+      forecastHTML +
+      `
+    <div class="col-2">
+     <div class="weather-forecast-date">${day}
+        <img
+          src="https://ssl.gstatic.com/onebox/weather/64/sunny.png"
+          alt=""
+          width="36"
+        />
+        <div class="weather-forecast-temperature">
+          <span class="weather-forecast-min">12°</span>
+          <span class="weather-forecast-max">18°</span>
+        </div>
+    </div>
+    </div> 
+    `;
+  });
+
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
+}
+
 function handleSubmit(event) {
   event.preventDefault();
   let cityInputElement = document.querySelector("#city-input");
@@ -82,6 +110,7 @@ function displayCelsiusTemperature(event) {
 let celsiusTemperature = null;
 
 search("New York");
+displayForecast();
 
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
