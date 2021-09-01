@@ -39,7 +39,7 @@ function getForecast(coordinates) {
 }
 
 //Display current temperature
-function displayTempertaure(response) {
+function displayTemperature(response) {
   let temperatureElement = document.querySelector("#temperature");
   let windElement = document.querySelector("#wind");
   let cityElement = document.querySelector("#city");
@@ -48,6 +48,7 @@ function displayTempertaure(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
+  //Attribute reponse to global variable
   celsiusTemperature = response.data.main.temp;
 
   descriptionElement.innerHTML = response.data.weather[0].description;
@@ -70,7 +71,7 @@ function displayTempertaure(response) {
 function search(city) {
   let apiKey = "078db4e136e212a8147d77a8cd2054b4";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-  axios.get(apiUrl).then(displayTempertaure);
+  axios.get(apiUrl).then(displayTemperature);
 }
 
 // Display forecast weather
@@ -110,6 +111,21 @@ function displayForecast(response) {
   forecastElement.innerHTML = forecastHTML;
 }
 
+// Use coordinates to make API call
+function searchLocation(position) {
+  let apiKey = "5f472b7acba333cd8a035ea85a0d4d4c";
+  let lat = position.coords.latitude;
+  let lon = position.coords.longitude;
+  let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+  axios.get(url).then(displayTemperature);
+}
+
+//Get current location from navigator
+function getCurrentLocation(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(searchLocation);
+}
+
 //Handle user city input
 function handleSubmit(event) {
   event.preventDefault();
@@ -117,6 +133,7 @@ function handleSubmit(event) {
   search(cityInputElement.value);
 }
 
+//Change fahrenheit link style & convert & round temp
 function displayFahrenheitTemperature(event) {
   event.preventDefault();
   //Remove acive class celsius link & add to fehrenheit
@@ -127,6 +144,7 @@ function displayFahrenheitTemperature(event) {
   temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
 }
 
+//Change celsius link style & round temp
 function displayCelsiusTemperature(event) {
   event.preventDefault();
   //Add acive class celsius link & remove to fehrenheit
@@ -136,7 +154,7 @@ function displayCelsiusTemperature(event) {
   temperatureElement.innerHTML = Math.round(celsiusTemperature);
 }
 
-//Global variable accessible all functions, used to store the value
+//Global variable accessible all functions, used to store temperature value
 let celsiusTemperature = null;
 
 //Default city to show if no user input received
@@ -145,6 +163,10 @@ search("New York");
 // Retrieve & send user input
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
+
+// Handle current position search
+let position = document.querySelector("#my-position");
+position.addEventListener("click", getCurrentLocation);
 
 //Handle changes from fahrenheit to celcius for current weather
 let fahrenheitLink = document.querySelector("#fahrenheit-link");
