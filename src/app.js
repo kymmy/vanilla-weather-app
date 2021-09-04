@@ -23,6 +23,20 @@ function formatDate(timestamp) {
   return `${day} ${hours}:${minutes}`;
 }
 
+// degree conversion from celsius to fahrenheit
+function getFahrenheit(temp) {
+  return Math.round((temp * 9) / 5 + 32);
+}
+
+// degree conversion: celsius vs. fahrenheit
+function getMinMaxForecastTemps(unit, minTemp, maxTemp) {
+  if (unit === "fahrenheit") {
+    return `${getFahrenheit(minTemp)}°/${getFahrenheit(maxTemp)}°`;
+  } else {
+    return `${Math.round(minTemp)}°/${Math.round(maxTemp)}°`;
+  }
+}
+
 //Format day for forecast
 function formatDay(timestamp) {
   let date = new Date(timestamp * 1000);
@@ -35,7 +49,7 @@ function formatDay(timestamp) {
 function getForecast(coordinates) {
   let apiKey = "078db4e136e212a8147d77a8cd2054b4";
   let apiURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
-  axios.get(apiURL).then(displayForecast);
+  axios.get(apiURL).then(showForecast);
 }
 
 //Display current temperature
@@ -75,40 +89,39 @@ function search(city) {
 }
 
 // Display forecast weather
-function displayForecast(response) {
-  let forecast = response.data.daily;
-  let forecastElement = document.querySelector("#forecast");
+function setForecasts(unit) {
   let forecastHTML = `<div class="row">`;
 
-  forecast.forEach(function (forecastDay, index) {
-    if (index < 6) {
-      forecastHTML =
-        forecastHTML +
-        `
+  for (let index = 1; index <= 6; index++) {
+    let forecast = forecastGlobal[index];
+    forecastHTML += `
     <div class="col-2">
-     <div class="weather-forecast-date">${formatDay(forecastDay.dt)}</div>
+     <div class="weather-forecast-date">${formatDay(forecast.dt)}</div>
         <img
           src="http://openweathermap.org/img/wn/${
-            forecastDay.weather[0].icon
+            forecast.weather[0].icon
           }@2x.png"
           alt=""
           width="36"
         />
-        <div class="weather-forecast-temperature">
-          <span class="weather-forecast-min">${Math.round(
-            forecastDay.temp.min
-          )}°</span>
-          <span class="weather-forecast-max">${Math.round(
-            forecastDay.temp.max
-          )}°</span>
+        <div class="forecast-temp">
+            ${getMinMaxForecastTemps(
+              unit,
+              forecast.temp.min,
+              forecast.temp.max
+            )}
         </div>
     </div> 
     `;
-    }
-  });
-
+  }
   forecastHTML = forecastHTML + `</div>`;
   forecastElement.innerHTML = forecastHTML;
+}
+
+// define forecastGlobal variable for setting the forecast for the next 5 days
+function showForecast(response) {
+  forecastGlobal = response.data.daily;
+  setForecasts("celsius");
 }
 
 // Use coordinates to make API call
@@ -142,6 +155,8 @@ function displayFahrenheitTemperature(event) {
   let temperatureElement = document.querySelector("#temperature");
   let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
   temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
+
+  setForecasts("fahrenheit");
 }
 
 //Change celsius link style & round temp
@@ -152,10 +167,14 @@ function displayCelsiusTemperature(event) {
   fahrenheitLink.classList.remove("active");
   let temperatureElement = document.querySelector("#temperature");
   temperatureElement.innerHTML = Math.round(celsiusTemperature);
+
+  setForecasts("celsius");
 }
 
 //Global variable accessible all functions, used to store temperature value
 let celsiusTemperature = null;
+let forecastGlobal = null;
+let forecastElement = document.querySelector("#forecast");
 
 //Default city to show if no user input received
 search("New York");
