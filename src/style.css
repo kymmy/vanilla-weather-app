@@ -32,6 +32,10 @@ li {
 li:first-letter {
   text-transform: capitalize;
 }
+
+.container {
+  margin-top: 80px;
+}
 .weather-app-wrapper {
   max-width: 600px;
   margin: 30px auto;
@@ -40,6 +44,8 @@ li:first-letter {
   padding: 20px;
   border: 1px solid #dadde1;
   border-radius: 5px;
+  color: whitesmoke;
+  background-color: #262a53;
 }
 .overview {
   margin-bottom: 20px;
@@ -64,7 +70,7 @@ li:first-letter {
 }
 
 .weather-temperature .active {
-  color: rgb(33, 33, 33);
+  color: whitesmoke;
   cursor: default;
 }
 
@@ -88,4 +94,22 @@ li:first-letter {
 
 .weather-forecast-min {
   opacity: 0.5;
+}
+
+#search {
+  background-color: #ffa0a0;
+  border: white;
+}
+
+#temperature {
+  color: white;
+}
+
+#my-position {
+  color: white;
+  border-color: white;
+}
+
+#github {
+  color: #ffa0a0;
 }
