@@ -62,6 +62,11 @@ function displayTemperature(response) {
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
 
+  // Activate celsius link
+  fahrenheitLink.classList.remove("active");
+  celsiusLink.classList.remove("active");
+  celsiusLink.classList.add("active");
+
   //Attribute reponse to global variable
   celsiusTemperature = response.data.main.temp;
 
@@ -142,6 +147,7 @@ function getCurrentLocation(event) {
 //Handle user city input
 function handleSubmit(event) {
   event.preventDefault();
+
   let cityInputElement = document.querySelector("#city-input");
   search(cityInputElement.value);
 }
